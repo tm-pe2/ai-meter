@@ -1,8 +1,5 @@
-use axum::{response::Json, routing::get, Router};
 use clap::Parser;
-use serde::Serialize;
 use std::net::SocketAddr;
-use tower_http::trace::TraceLayer;
 
 /// Server to simulate a meter
 #[derive(Parser, Debug)]
@@ -36,40 +33,11 @@ async fn main() {
     // Initiate logging to the terminal
     tracing_subscriber::fmt::init();
 
-    // Build our application with a route
-    let app = Router::new()
-        .route("/health", get(health))
-        .layer(TraceLayer::new_for_http());
-
-    // Run it
     let addr = args.addr;
     tracing::debug!("listening on {addr}");
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-}
+    let server = axum::Server::bind(&addr).serve(meter::app().into_make_service());
 
-// This is just a template add more states when needed
-/// Response to `/health`
-#[derive(Serialize)]
-struct Health {
-    status: HealthStatus,
-}
-
-/// All possible health states
-#[derive(Serialize)]
-enum HealthStatus {
-    /// Everything is working as it should
-    Available,
-
-    /// Something went wrong
-    #[allow(dead_code)]
-    Unavailable,
-}
-
-async fn health() -> Json<Health> {
-    Json(Health {
-        status: HealthStatus::Available,
-    })
+    if let Err(err) = server.await {
+        tracing::error!("server error: {:?}", err);
+    }
 }
