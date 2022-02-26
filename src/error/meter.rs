@@ -16,3 +16,5 @@ impl std::fmt::Display for MeterError {
         }
     }
 }
+
+impl std::error::Error for MeterError {}

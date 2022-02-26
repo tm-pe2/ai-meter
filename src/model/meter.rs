@@ -22,6 +22,7 @@ pub struct Meter {
 }
 
 impl Meter {
+    /// Create a new [`Meter`] with a [`House`] of 4 occupants
     pub fn new() -> Self {
         Self {
             last_data_point: DataPoint::new(),
@@ -29,6 +30,7 @@ impl Meter {
         }
     }
 
+    /// Calulates the values at the current time and returns/snapshots them
     pub fn snapshot(&mut self) -> MeterResult<DataPoint> {
         let duration = self
             .last_data_point
@@ -67,27 +69,39 @@ pub struct DataPoint {
     /// Power consumption during the night in kWh
     pub night_consumption: f32,
 
+    /// Power consumption at this point,
+    pub current_consumption: f32,
+
     /// Snapshot taken on
     pub datetime: SystemTime,
 }
 
 impl DataPoint {
+    /// Return a new [`DataPoint`] with nog data
     fn new() -> Self {
         Self {
             day_consumption: 0 as f32,
             night_consumption: 0 as f32,
+            current_consumption: 0 as f32,
             datetime: SystemTime::now(),
         }
     }
 
-    /// Create a new [`DataPoint`] with day/night comsumption
+    /// Create a new [`DataPoint`] with day/night and current comsumption
     /// and the current [`SystemTime`]
-    fn with(day_consumption: f32, night_consumption: f32) -> Self {
+    fn with(day_consumption: f32, night_consumption: f32, current_consumption: f32) -> Self {
         Self {
             day_consumption,
             night_consumption,
-            datetime: SystemTime::now(),
+            current_consumption,
+            ..Self::default()
         }
+    }
+}
+
+impl Default for DataPoint {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -98,6 +112,7 @@ impl Add<(f32, f32)> for DataPoint {
         DataPoint::with(
             self.day_consumption + day_consumption,
             self.night_consumption + night_consumption,
+            self.current_consumption,
         )
     }
 }
@@ -153,7 +168,7 @@ impl House {
 /// Device that can be on for a duration or untill manually turned off
 /// and consume electricity
 #[derive(Debug)]
-struct Device {
+pub struct Device {
     /// Name of the device
     name: String,
 

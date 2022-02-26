@@ -1,11 +1,15 @@
-use crate::{error::Result, model::health::Health};
+use crate::{
+    error::Result,
+    model::health::{DbHealth, Health},
+    PgPool,
+};
 
 pub struct HealthService;
 
 impl HealthService {
-    pub fn get() -> Result<Health> {
+    pub(crate) async fn get(pool: &PgPool) -> Result<Health> {
         Ok(Health {
-            place_holder: String::from("Good for now I guess"),
+            db: DbHealth::check(pool).await,
         })
     }
 }
