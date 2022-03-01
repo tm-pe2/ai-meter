@@ -48,6 +48,11 @@ pub struct UpdateDbDeviceData {
 
     /// For how long the devices runs
     /// if `None` forever
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "serde_with::rust::double_option"
+    )]
     duration: Option<Option<i32>>,
 }
 
