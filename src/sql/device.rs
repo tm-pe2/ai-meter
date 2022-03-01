@@ -1,15 +1,13 @@
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+
 use crate::{
     error::Result,
     model::{
         db::{CreateDbDeviceData, DbDevice, UpdateDbDeviceData},
         Identifier,
     },
-    schema::{devices, meterdevices::device},
+    schema::devices,
     PgPool,
-};
-use diesel::{
-    deserialize::QueryableByName, dsl::sql, pg::Pg, ExpressionMethods, NullableExpressionMethods,
-    PgTextExpressionMethods, QueryDsl, RunQueryDsl,
 };
 
 impl DbDevice {

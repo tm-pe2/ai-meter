@@ -14,12 +14,12 @@ TODO:
 ```sh
 cp example.env .env
 docker run --name postgres -e POSTGRES_PASSWORD=toor123 -p 5432:5432 -d postgres
-# Wait for a few second for the db to start
+# Wait for a few seconds for the db to start
 diesel setup
 ```
 - To start the docker db again
 ```sh
-docker run postgress
+docker start postgress
 ```
 
 3. Run the server

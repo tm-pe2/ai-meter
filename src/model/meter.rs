@@ -11,14 +11,14 @@ const IDLE_CONSUMPTION: f32 = 10.0;
 type MeterResult<T> = std::result::Result<T, MeterError>;
 
 /// Meter struct
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Meter {
     /// Last generated data point,
     /// this is used to generate the next one
-    last_data_point: DataPoint,
+    pub last_data_point: DataPoint,
 
     /// House where the meter is placed
-    house: House,
+    pub house: House,
 }
 
 impl Meter {
@@ -61,7 +61,7 @@ impl Default for Meter {
 }
 
 /// A snapshot of the meter at `datetime` with day/night consumption
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Serialize)]
 pub struct DataPoint {
     /// Power consumption during the day in kWh
     pub day_consumption: f32,
@@ -119,17 +119,17 @@ impl Add<(f32, f32)> for DataPoint {
 
 /// Representations of a house with n occupants and [`Device`]s that
 /// consume electricity
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct House {
     /// Number of occupants in the house
-    occupants: u32,
+    pub occupants: i32,
 
     /// List of devices
-    devices: Vec<Device>,
+    pub devices: Vec<Device>,
 }
 
 impl House {
-    fn new(occupants: u32) -> Self {
+    fn new(occupants: i32) -> Self {
         Self {
             occupants,
             devices: Vec::new(),
@@ -167,20 +167,20 @@ impl House {
 // NOTE: maybe in the future a device can also produce electricty
 /// Device that can be on for a duration or untill manually turned off
 /// and consume electricity
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Device {
     /// Name of the device
-    name: String,
+    pub name: String,
 
     /// How much the devices consumes in kWh
-    consumption: f32,
+    pub consumption: f32,
 
     /// For how long the devices runs
     /// if `None` forever
-    duration: Option<Duration>,
+    pub duration: Option<Duration>,
 
     /// Toggle to turn the device on
-    on: bool,
+    pub on: bool,
 }
 
 impl Device {

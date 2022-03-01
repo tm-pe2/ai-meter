@@ -18,6 +18,8 @@ pub enum Error {
     DieselResult(#[from] diesel::result::Error),
     #[error(transparent)]
     R2d2(#[from] r2d2::Error),
+    #[error("invalid identifier")]
+    InvalidIdentifier,
 }
 
 /// Type wrapper arround [`Error`]

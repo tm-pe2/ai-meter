@@ -8,6 +8,7 @@ use diesel::{pg::PgConnection, r2d2};
 use tower::ServiceBuilder;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
+pub mod dto;
 pub mod error;
 pub mod handler;
 pub mod model;

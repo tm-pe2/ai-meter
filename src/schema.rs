@@ -22,7 +22,7 @@ table! {
         id -> Int4,
         occupants -> Int4,
         day_consumption -> Float4,
-        night_consumtion -> Float4,
+        night_consumption -> Float4,
     }
 }
 

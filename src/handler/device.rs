@@ -31,7 +31,7 @@ pub(crate) async fn create(
 }
 
 pub(crate) async fn list(Extension(pool): Extension<PgPool>) -> ApiResult<Json<Vec<DbDevice>>> {
-    return Ok(Json(DeviceService::list(&pool).await?));
+    Ok(Json(DeviceService::list(&pool).await?))
 }
 
 pub(crate) async fn find_by(
