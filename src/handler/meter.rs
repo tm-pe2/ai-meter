@@ -6,18 +6,29 @@ use axum::{
 };
 
 use crate::{
-    dto::CreateMeterInput,
     dto::MeterOutput,
+    dto::{CreateMeterDeviceInput, CreateMeterInput, UpdateMeterDeviceInput},
     error::ApiResult,
-    model::{db::UpdateDbMeterData, IdentifierPath},
-    service::MeterService,
+    model::{
+        db::{DbMeterDevice, UpdateDbMeterData},
+        IdentifierPath,
+    },
+    service::{MeterDeviceService, MeterService},
     PgPool,
 };
 
 pub(crate) fn routes() -> Router {
     Router::new()
         .route("/", get(list).post(create))
-        .route("/:identifier", get(find_by).patch(update))
+        .route("/:meter_identifier", get(find_by).patch(update))
+        .route(
+            "/:meter_identifier/device/",
+            get(list_meterdevices).post(create_meterdevice),
+        )
+        .route(
+            "/:meter_identifier/device/:device_identifier",
+            get(find_device_by).patch(update_meterdevice),
+        )
 }
 
 pub(crate) async fn list(Extension(pool): Extension<PgPool>) -> ApiResult<Json<Vec<MeterOutput>>> {
@@ -50,4 +61,52 @@ pub(crate) async fn update(
     Ok(Json(
         MeterService::update(identifier.into(), input, &pool).await?,
     ))
+}
+
+pub(crate) async fn find_device_by(
+    Path((meter_identifier, device_identifier)): Path<(IdentifierPath, IdentifierPath)>,
+    Extension(pool): Extension<PgPool>,
+) -> ApiResult<Json<DbMeterDevice>> {
+    Ok(Json(
+        MeterDeviceService::get_by_identifiers(
+            meter_identifier.into(),
+            device_identifier.into(),
+            &pool,
+        )
+        .await?,
+    ))
+}
+
+pub(crate) async fn create_meterdevice(
+    Path(meter_identifier): Path<IdentifierPath>,
+    Json(input): Json<CreateMeterDeviceInput>,
+    Extension(pool): Extension<PgPool>,
+) -> ApiResult<(StatusCode, Json<DbMeterDevice>)> {
+    let meterdevice = MeterDeviceService::create(meter_identifier.into(), input, &pool).await?;
+
+    Ok((StatusCode::CREATED, Json(meterdevice)))
+}
+
+pub(crate) async fn list_meterdevices(
+    Path(meter_identifier): Path<IdentifierPath>,
+    Json(input): Json<CreateMeterDeviceInput>,
+    Extension(pool): Extension<PgPool>,
+) -> ApiResult<(StatusCode, Json<DbMeterDevice>)> {
+    todo!();
+}
+
+pub(crate) async fn update_meterdevice(
+    Path((meter_identifier, device_identifier)): Path<(IdentifierPath, IdentifierPath)>,
+    Json(input): Json<UpdateMeterDeviceInput>,
+    Extension(pool): Extension<PgPool>,
+) -> ApiResult<(StatusCode, Json<DbMeterDevice>)> {
+    let meterdevice = MeterDeviceService::update(
+        meter_identifier.into(),
+        device_identifier.into(),
+        input,
+        &pool,
+    )
+    .await?;
+
+    Ok((StatusCode::CREATED, Json(meterdevice)))
 }

@@ -102,12 +102,12 @@ impl Meter {
         data: UpdateDbMeterData,
         pool: &PgPool,
     ) -> Result<MeterOutput> {
-        let conn = pool.get()?;
-
         let id = match identifier {
             Identifier::Id(id) => id,
             Identifier::Name(_) => return Err(Error::InvalidIdentifier),
         };
+
+        let conn = pool.get()?;
 
         let meter: DbMeterDbOutput = diesel::update(meters::table.find(id))
             .set(&data)

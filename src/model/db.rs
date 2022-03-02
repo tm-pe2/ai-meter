@@ -3,24 +3,24 @@ use std::time::SystemTime;
 use crate::{
     dto::{HouseOutput, MeterOutput},
     model::meter::{DataPoint, Device},
-    schema::{devices, meters},
+    schema::{devices, meterdevices, meters},
 };
 
 /// [`Device`] as stored in the db
 #[derive(Debug, Queryable, Serialize)]
 pub struct DbDevice {
     /// Id/PK of the device
-    id: i32,
+    pub id: i32,
 
     /// Name of the device
-    name: String,
+    pub name: String,
 
     /// How much the devices consumes in kWh
-    consumption: f32,
+    pub consumption: f32,
 
     /// For how long the devices runs
     /// if `None` forever
-    duration: Option<i32>,
+    pub duration: Option<i32>,
 }
 
 /// Data structure required to create a `Device` in the db
@@ -52,7 +52,7 @@ pub struct UpdateDbDeviceData {
     /// if `None` forever
     #[serde(
         default,
-        skip_serializing_if = "Option::is_none",
+        skip_serializing_if = "option::is_none",
         with = "serde_with::rust::double_option"
     )]
     duration: Option<Option<i32>>,
@@ -126,6 +126,38 @@ pub struct DbMeterDevice {
     pub duration: Option<i32>,
 
     pub on: bool,
+}
+
+#[derive(Debug, Deserialize, Insertable)]
+#[table_name = "meterdevices"]
+pub struct CreateMeterDeviceData {
+    ///
+    pub meter: i32,
+
+    ///
+    pub device: i32,
+
+    ///
+    pub turned_on: bool,
+
+    ///
+    pub duration: Option<i32>,
+}
+
+#[derive(Debug, AsChangeset)]
+#[table_name = "meterdevices"]
+pub struct UpdateMeterDeviceData {
+    ///
+    pub meter: Option<i32>,
+
+    ///
+    pub device: Option<i32>,
+
+    ///
+    pub turned_on: Option<bool>,
+
+    ///
+    pub duration: Option<Option<i32>>,
 }
 
 impl From<DbMeterDevice> for Device {

@@ -1,4 +1,4 @@
-use crate::model::{db::DbMeterDevice, meter::DataPoint};
+use crate::model::{db::DbMeterDevice, meter::DataPoint, Identifier};
 
 #[derive(Debug, Serialize)]
 pub struct MeterOutput {
@@ -21,17 +21,35 @@ pub struct HouseOutput {
 
 #[derive(Debug, Deserialize)]
 pub struct CreateMeterInput {
-    /// Id/PK of the
-    pub id: i32,
-
     /// Number of occupants in the house
     pub occupants: i32,
 
-    // /// Devices assigned to the house
-    // pub meter_devices: Vec<i32>,
     ///
     pub day_consumption: f32,
 
     ///
     pub night_consumption: f32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CreateMeterDeviceInput {
+    ///
+    pub device: Identifier,
+
+    ///
+    pub on: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateMeterDeviceInput {
+    ///
+    pub on: Option<bool>,
+
+    ///
+    #[serde(
+        default,
+        skip_serializing_if = "option::is_none",
+        with = "serde_with::rust::double_option"
+    )]
+    pub duration: Option<Option<i32>>,
 }
