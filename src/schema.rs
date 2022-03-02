@@ -23,6 +23,7 @@ table! {
         occupants -> Int4,
         day_consumption -> Float4,
         night_consumption -> Float4,
+        last_snapshot -> Timestamp,
     }
 }
 

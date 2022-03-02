@@ -5,6 +5,7 @@ use thiserror::Error;
 // Rexport [`MeterError`] in crate::error
 pub use meter::MeterError;
 
+pub(crate) mod macros;
 mod meter;
 
 /// Error type of this create

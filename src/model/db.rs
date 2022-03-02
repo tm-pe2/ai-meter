@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 use crate::{
     dto::{HouseOutput, MeterOutput},
     model::meter::{DataPoint, Device},
@@ -60,17 +62,20 @@ pub struct UpdateDbDeviceData {
 #[table_name = "meters"]
 pub struct CreateDbMeterData {
     ///
-    occupants: i32,
+    pub occupants: i32,
 
     ///
-    day_consumption: f32,
+    pub day_consumption: f32,
 
     ///
-    night_consumption: f32,
+    pub night_consumption: f32,
+
+    ///
+    pub last_snapshot: SystemTime,
 }
 
 /// [`Meter`] as stored in the db spread between `meters` and `meterdevices`
-#[derive(Debug, Queryable, Serialize)]
+#[derive(Debug, Queryable)]
 pub struct DbMeterDbOutput {
     /// Id/PK of the
     pub id: i32,
@@ -85,6 +90,9 @@ pub struct DbMeterDbOutput {
 
     ///
     pub night_consumption: f32,
+
+    ///
+    last_snapshot: SystemTime,
 }
 
 #[derive(Debug, Deserialize, AsChangeset)]
@@ -98,6 +106,9 @@ pub struct UpdateDbMeterData {
 
     ///
     night_consumption: Option<f32>,
+
+    ///
+    last_snapshot: Option<SystemTime>,
 }
 
 #[derive(Debug, Queryable, Serialize)]

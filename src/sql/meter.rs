@@ -47,6 +47,7 @@ impl Meter {
                 meters::occupants,
                 meters::day_consumption,
                 meters::night_consumption,
+                meters::last_snapshot,
             ))
             .find(id)
             .first(&conn)?;
@@ -67,6 +68,7 @@ impl Meter {
                 //sql("array_agg(meterdevices.id)"),
                 meters::day_consumption,
                 meters::night_consumption,
+                meters::last_snapshot,
             ))
             //.left_join(meterdevices::table)
             //.group_by(meters::id)

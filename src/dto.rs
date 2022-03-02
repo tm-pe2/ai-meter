@@ -18,3 +18,20 @@ pub struct HouseOutput {
     pub occupants: i32,
     pub devices: Vec<DbMeterDevice>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct CreateMeterInput {
+    /// Id/PK of the
+    pub id: i32,
+
+    /// Number of occupants in the house
+    pub occupants: i32,
+
+    // /// Devices assigned to the house
+    // pub meter_devices: Vec<i32>,
+    ///
+    pub day_consumption: f32,
+
+    ///
+    pub night_consumption: f32,
+}

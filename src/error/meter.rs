@@ -1,3 +1,5 @@
+use crate::error::macros::quick_impl;
+
 /// Basic error type for the meter
 #[derive(Debug)]
 pub enum MeterError {
@@ -6,6 +8,9 @@ pub enum MeterError {
 
     /// A calculation error
     Calculation,
+
+    /// Time error
+    Time,
 }
 
 impl std::fmt::Display for MeterError {
@@ -13,8 +18,11 @@ impl std::fmt::Display for MeterError {
         match self {
             Self::Elapsed => write!(f, "Failed to get elapsed tiem since last datapoint"),
             Self::Calculation => write!(f, "Calculation error"),
+            Self::Time => write!(f, "Time error"),
         }
     }
 }
 
 impl std::error::Error for MeterError {}
+
+quick_impl!(From<std::time::SystemTimeError> for MeterError, MeterError::Time);

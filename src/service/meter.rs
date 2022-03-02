@@ -1,6 +1,7 @@
-pub struct MeterService;
+use std::time::SystemTime;
 
 use crate::{
+    dto::CreateMeterInput,
     dto::MeterOutput,
     error::Result,
     model::{
@@ -11,6 +12,8 @@ use crate::{
     PgPool,
 };
 
+pub struct MeterService;
+
 impl MeterService {
     pub(crate) async fn get_by_identifier(
         identifier: Identifier,
@@ -19,8 +22,14 @@ impl MeterService {
         Meter::get_by_identifer(identifier, pool).await
     }
 
-    pub(crate) async fn create(input: CreateDbMeterData, pool: &PgPool) -> Result<MeterOutput> {
-        Meter::create(input, pool).await
+    pub(crate) async fn create(input: CreateMeterInput, pool: &PgPool) -> Result<MeterOutput> {
+        let data = CreateDbMeterData {
+            occupants: input.occupants,
+            day_consumption: input.day_consumption,
+            night_consumption: input.night_consumption,
+            last_snapshot: SystemTime::now(),
+        };
+        Meter::create(data, pool).await
     }
 
     pub(crate) async fn update(

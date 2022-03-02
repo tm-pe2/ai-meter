@@ -6,12 +6,10 @@ use axum::{
 };
 
 use crate::{
+    dto::CreateMeterInput,
     dto::MeterOutput,
     error::ApiResult,
-    model::{
-        db::{CreateDbMeterData, UpdateDbMeterData},
-        IdentifierPath,
-    },
+    model::{db::UpdateDbMeterData, IdentifierPath},
     service::MeterService,
     PgPool,
 };
@@ -27,7 +25,7 @@ pub(crate) async fn list(Extension(pool): Extension<PgPool>) -> ApiResult<Json<V
 }
 
 pub(crate) async fn create(
-    Json(input): Json<CreateDbMeterData>,
+    Json(input): Json<CreateMeterInput>,
     Extension(pool): Extension<PgPool>,
 ) -> ApiResult<(StatusCode, Json<MeterOutput>)> {
     let meter = MeterService::create(input, &pool).await?;
