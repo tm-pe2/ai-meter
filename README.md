@@ -1,6 +1,7 @@
 # ai-meter
 
 <details><summary>JSON objects</summary>
+
 ## JSON objects
 ### Device
 ``` json
@@ -76,6 +77,7 @@
 </details>
 
 <details><summary>Endpoints</summary>
+
 ## Endpoints
 - /device
   - GET: list all devices  
