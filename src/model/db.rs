@@ -192,9 +192,15 @@ impl From<&DbMeterDevice> for Device {
 
 impl From<(Option<Vec<DbMeterDevice>>, DbMeterDbOutput)> for MeterOutput {
     fn from((devices, meter): (Option<Vec<DbMeterDevice>>, DbMeterDbOutput)) -> Self {
-        let devices = match devices {
-            Some(devices) => devices,
-            None => Vec::with_capacity(0),
+        let (devices, current_consumption) = match devices {
+            Some(devices) => {
+                let mut current_consumption = 0.0;
+                for device in devices.iter().filter(|&d| d.on) {
+                    current_consumption += device.consumption;
+                }
+                (devices, current_consumption)
+            }
+            None => (Vec::with_capacity(0), 0.0),
         };
 
         Self {
@@ -202,7 +208,7 @@ impl From<(Option<Vec<DbMeterDevice>>, DbMeterDbOutput)> for MeterOutput {
             last_data_point: DataPoint {
                 day_consumption: meter.day_consumption,
                 night_consumption: meter.night_consumption,
-                current_consumption: 0.0,
+                current_consumption,
                 datetime: std::time::SystemTime::now(),
             },
             house: HouseOutput {
