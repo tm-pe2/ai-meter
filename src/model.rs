@@ -4,7 +4,7 @@ pub mod db;
 pub mod health;
 pub mod meter;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Identifier {
     Id(i32),
     Name(String),

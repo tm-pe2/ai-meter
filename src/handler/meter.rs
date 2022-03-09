@@ -1,7 +1,7 @@
 use axum::{
     extract::{Extension, Path},
     http::StatusCode,
-    routing::get,
+    routing::{get, patch},
     Json, Router,
 };
 
@@ -21,6 +21,7 @@ pub(crate) fn routes() -> Router {
     Router::new()
         .route("/", get(list).post(create))
         .route("/:meter_identifier", get(find_by).patch(update))
+        .route("/:meter_identifier/update", patch(update_readings))
         .route(
             "/:meter_identifier/device/",
             get(list_meterdevices).post(create_meterdevice),
@@ -88,10 +89,9 @@ pub(crate) async fn create_meterdevice(
 }
 
 pub(crate) async fn list_meterdevices(
-    Path(meter_identifier): Path<IdentifierPath>,
-    Json(input): Json<CreateMeterDeviceInput>,
-    Extension(pool): Extension<PgPool>,
-) -> ApiResult<(StatusCode, Json<DbMeterDevice>)> {
+    Path(_meter_identifier): Path<IdentifierPath>,
+    Extension(_pool): Extension<PgPool>,
+) -> ApiResult<(StatusCode, Json<Vec<DbMeterDevice>>)> {
     todo!();
 }
 
@@ -109,4 +109,13 @@ pub(crate) async fn update_meterdevice(
     .await?;
 
     Ok((StatusCode::CREATED, Json(meterdevice)))
+}
+
+pub(crate) async fn update_readings(
+    Path(identifier): Path<IdentifierPath>,
+    Extension(pool): Extension<PgPool>,
+) -> ApiResult<Json<MeterOutput>> {
+    Ok(Json(
+        MeterService::update_readings(identifier.into(), &pool).await?,
+    ))
 }

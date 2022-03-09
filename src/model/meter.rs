@@ -32,11 +32,7 @@ impl Meter {
 
     /// Calulates the values at the current time and returns/snapshots them
     pub fn snapshot(&mut self) -> MeterResult<DataPoint> {
-        let duration = self
-            .last_data_point
-            .datetime
-            .elapsed()
-            .map_err(|_| MeterError::Elapsed)?;
+        let duration = self.last_data_point.datetime.elapsed()?;
 
         // TODO: split up in day & night
         // For this we need a way to get the start/end times of

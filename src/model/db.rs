@@ -2,7 +2,7 @@ use std::time::SystemTime;
 
 use crate::{
     dto::{HouseOutput, MeterOutput},
-    model::meter::{DataPoint, Device},
+    model::meter::{DataPoint, Device, House, Meter},
     schema::{devices, meterdevices, meters},
 };
 
@@ -92,26 +92,26 @@ pub struct DbMeterDbOutput {
     pub night_consumption: f32,
 
     ///
-    last_snapshot: SystemTime,
+    publast_snapshot: SystemTime,
 }
 
 #[derive(Debug, Deserialize, AsChangeset)]
 #[table_name = "meters"]
 pub struct UpdateDbMeterData {
     ///
-    occupants: Option<i32>,
+    pub occupants: Option<i32>,
 
     ///
-    day_consumption: Option<f32>,
+    pub day_consumption: Option<f32>,
 
     ///
-    night_consumption: Option<f32>,
+    pub night_consumption: Option<f32>,
 
     ///
-    last_snapshot: Option<SystemTime>,
+    pub last_snapshot: Option<SystemTime>,
 }
 
-#[derive(Debug, Queryable, Serialize)]
+#[derive(Debug, Queryable, Serialize, Clone)]
 pub struct DbMeterDevice {
     /// Id/PK of the
     pub id: i32,
@@ -208,6 +208,28 @@ impl From<(Option<Vec<DbMeterDevice>>, DbMeterDbOutput)> for MeterOutput {
             house: HouseOutput {
                 occupants: meter.occupants,
                 devices,
+            },
+        }
+    }
+}
+
+impl From<MeterOutput> for Meter {
+    fn from(meter_output: MeterOutput) -> Self {
+        Self {
+            last_data_point: DataPoint {
+                day_consumption: meter_output.last_data_point.day_consumption,
+                night_consumption: meter_output.last_data_point.night_consumption,
+                current_consumption: meter_output.last_data_point.current_consumption,
+                datetime: meter_output.last_data_point.datetime,
+            },
+            house: House {
+                occupants: meter_output.house.occupants,
+                devices: meter_output
+                    .house
+                    .devices
+                    .iter()
+                    .map(|d| d.into())
+                    .collect(),
             },
         }
     }

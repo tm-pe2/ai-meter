@@ -29,6 +29,7 @@ impl MeterService {
             night_consumption: input.night_consumption,
             last_snapshot: SystemTime::now(),
         };
+
         Meter::create(data, pool).await
     }
 
@@ -38,6 +39,26 @@ impl MeterService {
         pool: &PgPool,
     ) -> Result<MeterOutput> {
         Meter::update(identifier, input, pool).await
+    }
+
+    pub(crate) async fn update_readings(
+        identifier: Identifier,
+        pool: &PgPool,
+    ) -> Result<MeterOutput> {
+        let meter_output = Meter::get_by_identifer(identifier.clone(), pool).await?;
+
+        let mut meter: Meter = meter_output.into();
+
+        let datapoint = meter.snapshot()?;
+
+        let data = UpdateDbMeterData {
+            occupants: None,
+            day_consumption: Some(datapoint.day_consumption),
+            night_consumption: Some(datapoint.night_consumption),
+            last_snapshot: Some(SystemTime::now()),
+        };
+
+        Meter::update(identifier, data, pool).await
     }
 
     pub(crate) async fn list(pool: &PgPool) -> Result<Vec<MeterOutput>> {

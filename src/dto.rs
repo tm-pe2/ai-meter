@@ -1,6 +1,6 @@
 use crate::model::{db::DbMeterDevice, meter::DataPoint, Identifier};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct MeterOutput {
     /// id
     pub id: i32,
@@ -13,7 +13,7 @@ pub struct MeterOutput {
     pub house: HouseOutput,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct HouseOutput {
     pub occupants: i32,
     pub devices: Vec<DbMeterDevice>,
