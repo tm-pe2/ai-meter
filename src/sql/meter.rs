@@ -113,6 +113,12 @@ impl Meter {
             .set(&data)
             .get_result(&conn)?;
 
-        Ok(MeterOutput::from((None, meter)))
+        let devices = match Self::get_devices(id, pool).await {
+            Ok(devices) => devices,
+            Err(Error::DieselResult(diesel::result::Error::NotFound)) => Vec::with_capacity(0),
+            Err(err) => return Err(err),
+        };
+
+        Ok(MeterOutput::from((Some(devices), meter)))
     }
 }

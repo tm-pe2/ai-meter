@@ -92,7 +92,7 @@ pub struct DbMeterDbOutput {
     pub night_consumption: f32,
 
     ///
-    publast_snapshot: SystemTime,
+    pub last_snapshot: SystemTime,
 }
 
 #[derive(Debug, Deserialize, AsChangeset)]

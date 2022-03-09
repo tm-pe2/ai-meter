@@ -15,6 +15,7 @@ pub mod model;
 pub mod schema;
 pub mod service;
 mod sql;
+mod util;
 
 pub type PgPool = r2d2::Pool<r2d2::ConnectionManager<PgConnection>>;
 

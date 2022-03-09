@@ -39,7 +39,7 @@ impl MeterDeviceService {
         let data = CreateMeterDeviceData {
             meter: meter_id,
             device: device.id,
-            turned_on: false,
+            turned_on: input.on,
             duration: device.duration,
         };
 

@@ -3,7 +3,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use crate::error::MeterError;
+use crate::{error::MeterError, util::epoch};
 
 /// Idle power consumption per occupant in kWh
 const IDLE_CONSUMPTION: f32 = 10.0;
@@ -69,6 +69,7 @@ pub struct DataPoint {
     pub current_consumption: f32,
 
     /// Snapshot taken on
+    #[serde(serialize_with = "epoch::system_time")]
     pub datetime: SystemTime,
 }
 
