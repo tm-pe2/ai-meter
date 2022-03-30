@@ -72,6 +72,12 @@ pub struct CreateDbMeterData {
 
     ///
     pub last_snapshot: SystemTime,
+
+    ///
+    pub latitude: f32,
+
+    ///
+    pub longitude: f32,
 }
 
 /// [`Meter`] as stored in the db spread between `meters` and `meterdevices`
@@ -93,6 +99,12 @@ pub struct DbMeterDbOutput {
 
     ///
     pub last_snapshot: SystemTime,
+
+    ///
+    pub latitude: f32,
+
+    ///
+    pub longitude: f32,
 }
 
 #[derive(Debug, Deserialize, AsChangeset)]
@@ -109,6 +121,12 @@ pub struct UpdateDbMeterData {
 
     ///
     pub last_snapshot: Option<SystemTime>,
+
+    ///
+    pub latitude: Option<f32>,
+
+    ///
+    pub longitude: Option<f32>,
 }
 
 #[derive(Debug, Queryable, Serialize, Clone)]
@@ -213,6 +231,8 @@ impl From<(Option<Vec<DbMeterDevice>>, DbMeterDbOutput)> for MeterOutput {
             },
             house: HouseOutput {
                 occupants: meter.occupants,
+                latitude: meter.latitude,
+                longitude: meter.longitude,
                 devices,
             },
         }

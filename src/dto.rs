@@ -16,6 +16,8 @@ pub struct MeterOutput {
 #[derive(Debug, Serialize, Clone)]
 pub struct HouseOutput {
     pub occupants: i32,
+    pub latitude: f32,
+    pub longitude: f32,
     pub devices: Vec<DbMeterDevice>,
 }
 
@@ -29,6 +31,12 @@ pub struct CreateMeterInput {
 
     ///
     pub night_consumption: f32,
+
+    ///
+    pub latitude: f32,
+
+    ///
+    pub longitude: f32,
 }
 
 #[derive(Debug, Deserialize)]
