@@ -48,6 +48,8 @@ impl Meter {
                 meters::day_consumption,
                 meters::night_consumption,
                 meters::last_snapshot,
+                meters::latitude,
+                meters::longitude,
             ))
             .find(id)
             .first(&conn)?;
@@ -69,6 +71,8 @@ impl Meter {
                 meters::day_consumption,
                 meters::night_consumption,
                 meters::last_snapshot,
+                meters::latitude,
+                meters::longitude,
             ))
             //.left_join(meterdevices::table)
             //.group_by(meters::id)

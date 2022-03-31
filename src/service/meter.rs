@@ -28,6 +28,8 @@ impl MeterService {
             day_consumption: input.day_consumption,
             night_consumption: input.night_consumption,
             last_snapshot: SystemTime::now(),
+            latitude: input.latitude,
+            longitude: input.longitude,
         };
 
         Meter::create(data, pool).await
@@ -56,6 +58,8 @@ impl MeterService {
             day_consumption: Some(datapoint.day_consumption),
             night_consumption: Some(datapoint.night_consumption),
             last_snapshot: Some(SystemTime::now()),
+            latitude: None,
+            longitude: None,
         };
 
         Meter::update(identifier, data, pool).await

@@ -53,6 +53,8 @@
   "type": "object",
   "properties": {
     "occupants": { "type": "number" },
+    "latitude": { "type": "number" },
+    "longitude": { "type": "number" },
     "devices": {
       "type": "array", 
       "items": "meterdevice"
@@ -157,7 +159,9 @@
             --url http://localhost:3000/meter/4 \
             --header 'Content-Type: application/json' \
             --data '{
-                "occupants": 1
+                "occupants": 1,
+                "latitude": 50.5039,
+                "longitude": 4.4699
             }'
         ```
       - /update

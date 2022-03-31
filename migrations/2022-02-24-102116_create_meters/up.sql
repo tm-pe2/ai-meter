@@ -3,5 +3,7 @@ CREATE TABLE IF NOT EXISTS meters (
     occupants INT NOT NULL,
     day_consumption REAL NOT NULL,
     night_consumption REAL NOT NULL,
-    last_snapshot TIMESTAMP NOT NULL
+    last_snapshot TIMESTAMP NOT NULL,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL
 );

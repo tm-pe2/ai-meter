@@ -54,7 +54,7 @@ impl MeterDeviceService {
         input: UpdateMeterDeviceInput,
         pool: &PgPool,
     ) -> Result<DbMeterDevice> {
-        let (meter_id, meterdevice_id) = match (meter_identifier, meterdevice_identifier) {
+        let (_meter_id, meterdevice_id) = match (meter_identifier, meterdevice_identifier) {
             (Identifier::Id(meter_id), Identifier::Id(device_id)) => (meter_id, device_id),
             _ => return Err(Error::InvalidIdentifier),
         };

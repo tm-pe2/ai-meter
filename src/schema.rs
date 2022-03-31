@@ -24,6 +24,8 @@ table! {
         day_consumption -> Float4,
         night_consumption -> Float4,
         last_snapshot -> Timestamp,
+        latitude -> Float4,
+        longitude -> Float4,
     }
 }
 
