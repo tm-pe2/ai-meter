@@ -222,9 +222,13 @@ docker start postgress
 - Debug: `cargo run`
 - Release: `cargo run --release`
 - arguments: `cargo run -- --help`
+- NOTE: Values in databse-url must be url encoded
 
 ### Docker
-TODO:
+```bash
+#docker run ghcr.io/tm-pe2/meter --database-url 'postgres://<user-name>:<password>@<server>:<port>/<database>'
+docker run ghcr.io/tm-pe2/meter --database-url 'postgres://ai:Ai2022%25@10.97.0.10:5432/meter' --log-level debug
+```
 
 ## Notes
 - `insomnia-req-collection.json` is created with and can be imported by [insomnia](https://insomnia.rest/)
