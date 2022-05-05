@@ -226,8 +226,8 @@ docker start postgress
 
 ### Docker
 ```bash
-#docker run ghcr.io/tm-pe2/meter --database-url 'postgres://<user-name>:<password>@<server>:<port>/<database>'
-docker run ghcr.io/tm-pe2/meter --database-url 'postgres://ai:Ai2022%25@10.97.0.10:5432/meter' --log-level debug
+#docker run ewoutvdb/ai-meter --database-url 'postgres://<user-name>:<password>@<server>:<port>/<database>'
+docker run ewoutvdb/ai-meter --database-url 'postgres://ai:Ai2022%25@10.97.0.10:5432/meter' --log-level debug
 ```
 
 ## Notes
