@@ -143,7 +143,9 @@
           --data '{
               "occupants": 4,
               "day_consumption": 0,
-              "night_consumption": 0
+              "night_consumption": 0,
+              "latitude": 50.5039,
+              "longitude": 4.4699
           }'
     ```
     - /:meter_id
@@ -227,7 +229,7 @@ docker start postgress
 ### Docker
 ```bash
 #docker run ewoutvdb/ai-meter --database-url 'postgres://<user-name>:<password>@<server>:<port>/<database>'
-docker run ewoutvdb/ai-meter --database-url 'postgres://ai:Ai2022%25@10.97.0.10:5432/meter' --log-level debug
+docker run -p 3000:3000 ewoutvdb/ai-meter --database-url 'postgres://ai:Ai2022%25@10.97.0.10:5432/meter' --addr 0.0.0.0:3000 --log-level debug
 ```
 
 ## Notes
