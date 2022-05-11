@@ -23,7 +23,7 @@ pub(crate) fn routes() -> Router {
         .route("/:meter_identifier", get(find_by).patch(update))
         .route("/:meter_identifier/update", patch(update_readings))
         .route(
-            "/:meter_identifier/device/",
+            "/:meter_identifier/device",
             get(list_meterdevices).post(create_meterdevice),
         )
         .route(
