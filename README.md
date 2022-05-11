@@ -167,7 +167,7 @@
             }'
         ```
       - /update
-          - GET: Same as `GET /meter/:meter_id` but this also update/recalculates the usage  
+          - PATCH: Same as `GET /meter/:meter_id` but this also update/recalculates the usage  
             Returns: meter with updated day/night consumption
       - /device
         - POST: Add a device to the current meter from the device listed in `GET /device`  
