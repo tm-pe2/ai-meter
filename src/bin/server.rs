@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use clap::Parser;
 use diesel::{pg::PgConnection, r2d2};
+use tokio::signal;
 
 use meter::PgPool;
 
@@ -23,7 +24,8 @@ struct Args {
 
 #[tokio::main]
 async fn main() {
-    // Load the `$PWD/.env` file
+    // Load the `$PWD/.env` file on a debug build
+    #[cfg(debug_assertions)]
     dotenv::dotenv().ok();
 
     // Get command line arguments
@@ -53,10 +55,38 @@ async fn main() {
         .expect("initial DB connection failed");
 
     let addr = args.addr;
-    tracing::debug!("listening on {addr}");
-    let server = axum::Server::bind(&addr).serve(meter::app(pg_pool).into_make_service());
+    tracing::info!("listening on {addr}");
+    let server = axum::Server::bind(&addr)
+        .serve(meter::app(pg_pool).into_make_service())
+        .with_graceful_shutdown(shutdown_signal());
 
     if let Err(err) = server.await {
         tracing::error!("server error: {:?}", err);
     }
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
+
+    tracing::info!("signal received, starting graceful shutdown");
 }
