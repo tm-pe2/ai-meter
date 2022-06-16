@@ -227,7 +227,7 @@ impl From<(Option<Vec<DbMeterDevice>>, DbMeterDbOutput)> for MeterOutput {
                 day_consumption: meter.day_consumption,
                 night_consumption: meter.night_consumption,
                 current_consumption,
-                datetime: std::time::SystemTime::now(),
+                datetime: meter.last_snapshot,
             },
             house: HouseOutput {
                 occupants: meter.occupants,
